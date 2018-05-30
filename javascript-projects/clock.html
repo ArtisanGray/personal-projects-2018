@@ -1,0 +1,112 @@
+
+
+<!DOCTYPE html>
+<html>
+<body>
+<canvas id="clock" width="400" height="400" style="background-color:#333 border-radius: 200px;"></canvas>
+<script>
+var canvas = document.getElementById("clock");
+var pen = canvas.getContext("2d");
+// calculate radius
+var radius = canvas.height / 2;
+// remap center to (0,0)
+pen.translate(radius,radius);
+// make the circle smaller
+radius = radius * 0.90;
+radius2 = radius * 0.85;
+setInterval(drawClock, 1000);
+function drawClock()
+{
+  drawFace(pen,radius);
+  drawNumbers(pen,radius);
+  drawTime(radius);
+  pen.beginPath();
+  pen.arc(0,0,radius*0.05,0,2*Math.PI);
+  pen.fillStyle="orange"
+  pen.fill();
+}
+function drawFace(){
+  // draw a white circle
+  pen.arc(0,0,radius,0,2*Math.PI);
+  var grd = pen.createRadialGradient(0,0,155,0,0,340);
+  grd.addColorStop(0,"white");
+  grd.addColorStop(1,"black");
+
+// Fill with gradient
+  pen.fillStyle = grd;
+  pen.fill();
+  
+  // draw outer circle
+  pen.beginPath();
+  pen.arc(0,0,radius,0,2*Math.PI);
+  var grd2 = pen.createRadialGradient(0,0,100,0,0,380);
+
+  grd2.addColorStop(0, "black");
+  grd2.addColorStop(1, "gray");
+  pen.strokeStyle= grd2;
+  pen.lineWidth=radius*0.10;
+  pen.stroke();
+  
+  // draw inner circle
+ 
+  
+  drawNumbers(pen, radius);
+  drawTime(pen,radius);
+}
+function drawTime(radius)
+{
+  
+  var now = new Date();
+  var hour = now.getHours();
+  var minute = now.getMinutes();
+  var seconds = now.getSeconds();
+  //
+  hour = hour % 12;
+  hour = (hour*Math.PI/6)+(minute*Math.PI/(6*60))
+  + (seconds*Math.PI/(6*60*60));
+  // draw the hour
+  drawHands(pen, hour, radius*0.5, radius*0.05);
+  minute = (minute*Math.PI/(30))+(seconds*Math.PI/(30*60));
+  drawHands(pen, minute, radius*0.75, radius*0.03);
+  seconds = (seconds*Math.PI/30);
+ 
+  drawHands(pen, seconds, radius*0.78, radius*0.03);
+}
+function drawHands(pen, pos, length, width)
+{
+    pen.beginPath();
+    pen.lineWidth = width;
+    pen.moveTo(0,0);
+    pen.rotate(pos);
+    pen.lineTo(0,-length);
+    pen.stroke();
+    pen.rotate(-pos);
+    pen.closePath();
+}
+function drawNumbers(pen, radius){
+  var ang = 30 * Math.PI/180;
+  pen.font= radius2*0.14+"px Arial";
+  pen.textBaseline="middle";
+  pen.textAlign="center";
+  pen.fillStyle="black";
+  rom = ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"];
+  // print 12 numbers around the circle
+  for(i = 0; i < 12; i++){
+    pen.rotate(ang);
+    pen.translate(0, -radius2*.85);
+    pen.rotate(-ang);
+    pen.fillText(rom[i].toString(),0,0);
+    pen.rotate(ang);
+    pen.translate(0, radius2*.85);
+    pen.rotate(-ang);
+    ang += 30 * Math.PI / 180
+  }
+
+}
+
+drawFace();
+
+</script>
+
+</body>
+</html>
