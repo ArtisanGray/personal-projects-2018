@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+<canvas id="digclock" width="600" height="252" style="background-image:url('blob.jpg'); border-radius: 126px;"></canvas>
+<script>
+var canvas = document.getElementById("digclock");
+var pen = canvas.getContext("2d");
+
+setInterval(drawClock, 1000);
+
+function drawClock()
+{
+  weekd = ["Sunday", "Monday","Tuesday", "Wednesday","Thursday","Friday","Saturday"];
+  tmonth=["January","February","March","April","May,","June","July","August","September","October","November","December"];
+  var now = new Date();
+  var year = now.getFullYear();
+  var day = now.getDay();
+  var m = now.getMonth();
+  var date = now.getDate();
+  var hour = now.getHours();
+  var minute = now.getMinutes();
+  var seconds = now.getSeconds();
+  minute = minute > 9 ? minute : '0' + minute;
+  seconds = seconds > 9 ? seconds : '0' +seconds;
+  pen.clearRect(0, 0, canvas.width, canvas.height);
+  pen.font= 42 +"px Arial";
+  pen.textBaseline="middle";
+  pen.textAlign="center";
+  pen.fillStyle="white";
+  pen.fillText(weekd[day]+', '+tmonth[m]+" "+date+", "+year,300,115);
+  pen.fillText(hour+":"+minute+":"+seconds,300,186);
+
+}
+drawClock();
+</script>
+</body>
+</html>
